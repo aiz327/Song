@@ -1,1 +1,152 @@
 ()分组操作符
+/**
+ * Created by sWX288531 on 2015/6/27.
+ */
+// JS创建对象的方式
+var obj = new Object();
+obj.name = "song";
+obj.age = 12;
+obj.sayHello = function () {
+    console.log(this.name);
+};
+obj.sayHello();
+
+/*
+ 工厂模式
+ */
+function createPerson(name, age, job){
+    var o = new Object();
+    o.name = name;
+    o.age = age;
+    o.job = job;
+    o.sayName = function(){
+        console.log(this.name);
+    };
+    return o;
+}
+var person1 = createPerson("Nicholas", 29, "Software Engineer");
+console.log("create "+person1.name);
+var person2 = createPerson("Greg", 27, "Doctor");
+
+/*
+    构造函数--
+ 要创建 Person 的新实例，必须使用new 操作符。以这种方式调用构造函数实际上会经历以下4
+ 个步骤：(new的作用)
+ (1) 创建一个新对象；
+ (2) 将构造函数的作用域赋给新对象（因此this 就指向了这个新对象）；
+ (3) 执行构造函数中的代码（为这个新对象添加属性）；
+ (4) 返回新对象。
+ */
+function Person(name, age){
+    this.name = name;
+    this.age = age;
+    this.sayName = function(){
+        console.log("construct "+this.name);
+    }
+}
+var person1 = new Person("Nicholas", 29);
+//person1.sayName();
+var person2 = new Person("Greg", 27);
+//person2.sayName();
+
+/*
+ 原型模式
+ */
+function Person(){
+}
+Person.prototype.name = "Nicholas";
+Person.prototype.age = 29;
+Person.prototype.job = "Software Engineer";
+Person.prototype.sayName = function(){
+    console.log(this.name);
+};
+var person1 = new Person();
+person1.name = "song";
+//person1.prototype.name = "prototype modify";
+person1.sayName(); //"Nicholas"
+var person2 = new Person();
+person2.sayName(); //"Nicholas"
+console.log(person1.sayName == person2.sayName); //true
+
+/*
+ 创建自定义类型的最常见方式，就是组合使用构造函数模式与原型模式。构造函数模式用于定义实
+ 例属性，而原型模式用于定义方法和共享的属性
+ 结果，每个实例都会有自己的一份实例属性的副本，
+ 但同时又共享着对方法的引用，最大限度地节省了内存。另外，这种混成模式还支持向构造函数传递参
+ 数；可谓是集两种模式之长。
+ 这种构造函数与原型混成的模式，是目前在ECMAScript 中使用最广泛、认同度最高的一种创建自
+ 定义类型的方法。
+ */
+function Person(name, age, job){
+    this.name = name;
+    this.age = age;
+    this.job = job;
+    this.friends = ["Shelby", "Court"];
+}
+Person.prototype = {
+    constructor : Person,
+    sayName : function(){
+        console.log(this.name);
+    }
+}
+var person1 = new Person("Nicholas", 29, "Software Engineer");
+var person2 = new Person("Greg", 27, "Doctor");
+person1.friends.push("Van");
+console.log(person1.friends); //"Shelby,Count,Van"
+console.log(person2.friends); //"Shelby,Count"
+console.log(person1.friends === person2.friends); //false
+console.log(person1.sayName === person2.sayName); //true
+
+/*
+ 寄生构造函数模式
+ 这个模式可以在特殊的情况下用来为对象创建构造函数。假设我们想创建一个具有额外方法的特殊
+ 数组。由于不能直接修改Array 构造函数，因此可以使用这个模式。
+ */
+function SpecialArray(){
+//创建数组
+    var values = new Array();
+//添加值
+    values.push.apply(values, arguments);
+//添加方法
+    values.toPipedString = function(){
+        return this.join("|");
+    };
+//返回数组
+    return values;
+}
+var colors = new SpecialArray("red", "blue", "green");
+console.log(colors.toPipedString()); //"red|blue|green"
+console.log(typeof colors);
+console.log(colors instanceof Array);
+console.log(colors instanceof SpecialArray);
+
+/*
+ 原型链实现继承
+ */
+function SuperType(){
+    this.property = true;
+    this.name = "song";
+}
+SuperType.prototype.getSuperValue = function(){
+    return this.property;
+};
+function SubType(){
+    this.subproperty = false;
+}
+//继承了SuperType
+SubType.prototype = new SuperType();
+SubType.prototype.getSubValue = function (){
+    return this.subproperty;
+};
+var instance = new SubType();
+console.log(instance.getSuperValue()); //true
+console.log(instance.name); //true
+
+/*
+ 通过实现原型链，本质上扩展了本章前面介绍的原型搜索机制。读者大概还记得，当以读取模式访
+ 问一个实例属性时，首先会在实例中搜索该属性。如果没有找到该属性，则会继续搜索实例的原型。在
+ 通过原型链实现继承的情况下，搜索过程就得以沿着原型链继续向上。就拿上面的例子来说，调用
+ instance.getSuperValue()会经历三个搜索步骤：1）搜索实例；2）搜索SubType.prototype；
+ 3）搜索SuperType.prototype，最后一步才会找到该方法。在找不到属性或方法的情况下，搜索过
+ 程总是要一环一环地前行到原型链末端才会停下来
+ */
