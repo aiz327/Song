@@ -1,0 +1,6 @@
+Cache-control 
+max-age=xxx (xxx is numeric)	缓存的内容将在 xxx 秒后失效, 这个选项只在HTTP 1.1可用, 并如果和Last-Modified一起使用时, 优先级较高
+Expires 表示存在时间，允许客户端在这个时间之前不去检查（发请求），等同max-age的
+效果。但是如果同时存在，则被Cache-Control的max-age覆盖。
+Cache-directive	              打开一个新的浏览器窗口	                在原窗口中单击 Enter 按钮	              刷新	                      单击 Back 按钮
+max-age=xxx (xxx is numeric)	在 xxx 秒后，浏览器重新发送请求到服务器	在 xxx 秒后，浏览器重新发送请求到服务器	浏览器重新发送请求到服务器	在 xxx 秒后，浏览器重新发送请求到服务器
