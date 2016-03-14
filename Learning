@@ -29,3 +29,27 @@ splice（0,2,"",......）
 第二个参数：操作的数量
 第三个参数以上：插入的新数组值
 splice()方法始终都会返回一个数组，splice会影响原数组。splice执行后的返回值为删除的数组部分
+
+
+函数是对象，函数名是指针。函数没有重载，因为函数名是指针。
+函数声明与函数表达式不同点只有函数声明有函数声明提升，代码执行之前会首先将函数声明添加到执行环境
+函数内部有两个特殊的对象：arguments、this
+arguments不只保存了函数参数，还有一个属性callee，callee是一个指针指向拥有这个arguments的函数
+
+this引用指向的是当前函数得以执行的环境对象（new对象和全局）
+对象会作为大的执行环境（类似于windows全局），对象中的方法执行，this找寻的路径是是局部-对象，不会再去全局找，因为this是引用，指向当前函数得以运行的环境对象
+var name = "zhanghuixin";
+var testObj = {name:"songshuanglai"};
+testObj.sayName = function(){
+    console.log(this.name);
+    console.log(name);
+};
+testObj.sayName();//songshuanglai、zhanghuixin
+
+var a = testObj.sayName;
+a();//zhanghuixin、zhanghuixin
+
+每个函数对象都有两个方法apply和call。都是在特定的作用域中调用函数。
+apply方法有两个参数，第一个是运行函数的作用域，第二个是参数数组
+call方法作用与apply相同，只是传入的参数不同，第一个同样是运行函数的作用域，其余的都是传入的参数
+
