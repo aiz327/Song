@@ -53,3 +53,47 @@ a();//zhanghuixin、zhanghuixin
 apply方法有两个参数，第一个是运行函数的作用域，第二个是参数数组
 call方法作用与apply相同，只是传入的参数不同，第一个同样是运行函数的作用域，其余的都是传入的参数
 
+完美的继承实现方式
+----------------------------------------------------
+function A(a){
+  this.varA = a;
+}
+
+// 以上函数 A 的定义中，既然 A.prototype.varA 总是会被 this.varA 遮蔽，
+// 那么将 varA 加入到原型（prototype）中的目的是什么？
+A.prototype = {
+  varA : null,  // 既然它没有任何作用，干嘛不将 varA 从原型（prototype）去掉？
+      // 也许作为一种在隐藏类中优化分配空间的考虑？
+      // https://developers.google.com/speed/articles/optimizing-javascript#Initializing instance variables
+      // 将会验证如果 varA 在每个实例不被特别初始化会是什么情况。
+  doSomething : function(){
+    // ...
+  }
+}
+
+function B(a, b){
+  A.call(this, a);
+  this.varB = b;
+}
+B.prototype = Object.create(A.prototype, {
+  varB : {
+    value: null, 
+    enumerable: true, 
+    configurable: true, 
+    writable: true 
+  },
+  doSomething : { 
+    value: function(){ // override
+      A.prototype.doSomething.apply(this, arguments); // call super
+      // ...
+    },
+    enumerable: true,
+    configurable: true, 
+    writable: true
+  }
+});
+B.prototype.constructor = B;
+
+var b = new B();
+b.doSomething();
+----------------------------------------------------
