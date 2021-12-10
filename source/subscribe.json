@@ -1,0 +1,15 @@
+{
+  "customOrder": 1,
+  "enableJs": true,
+  "enabled": true,
+  "loadWithBaseUrl": false,
+  "ruleArticles": "@css:.booklist-book-item",
+  "ruleContent": "",
+  "ruleLink": "@css:.card-bookInfo-meta>a@href##^##http://www\\.yousuu\\.com",
+  "rulePubDate": "@css:.ResultBooklistItemClasses,.ResultBooklistItemUpdateAt@text##,,##,",
+  "ruleTitle": "@css:.booklist-card-content>a@text",
+  "sourceGroup": "song的订阅源",
+  "sourceIcon": "https://gitee.com/alanskycn/yuedu/raw/master/JS/youshuwang.png",
+  "sourceName": "优书网-清风扫书",
+  "sourceUrl": "https://www.yousuu.com/booklist/5faf50f0f53d24263c5f79ac"
+}
